@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+		<title>Weather</title>
+
+		<!-- Bootstrap -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="css/index.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+		<script>
+    		function gettingJSON(){
+        		var city = $('#city-name').val();
+        		//document.write("jquery loaded");
+        		$.getJSON("http://api.openweathermap.org/data/2.5/weather?q=" + city + "&APPID=400eeadc921bc85d05baffffa5663217&units=metric",function(json){
+            		//document.write(JSON.stringify(json));
+								$('#city').text(json.name);
+								$('#temperature').text(json.main.temp);
+        			});
+    		}
+    	</script>
+	</head>
+
+	<body>
+
+		<nav class="navbar navbar-default navbar-fixed-top">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="#">Check Weather</a>
+				</div>
+				<div class="collapse navbar-collapse" id="myNavbar">
+					<ul class="nav navbar-nav">
+						<li class="active"><a href="#">Home</a></li>
+						<li><a href="#">Current weather</a></li>
+						<li><a href="#">3-days forecast</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="form-group">
+						<input id="city-name" type="text" class="form-control" placeholder="City name"/>
+						<button id = "getIt" class="btn btn-default" onclick = "gettingJSON()">Get Weather</button>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-sm-6">
+					<ul class="list-group">
+						<li class="list-group-item active">City: <span id="city"></span></li>
+						<li class="list-group-item">Temperature: <span id="temperature"></span></li>
+					</ul>
+				</div>
+				<div class="col-sm-6">
+
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

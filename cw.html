@@ -20,10 +20,13 @@
         		//document.write("jquery loaded");
         		$.getJSON("http://api.openweathermap.org/data/2.5/weather?q=" + city + "&APPID=400eeadc921bc85d05baffffa5663217&units=metric",function(json){
             		//document.write(JSON.stringify(json));
-								$('#city').text(json.name);
-								$('#temperature').text(json.main.temp);
+								showWeatherData(json);
         			});
     		}
+				function showWeatherData(json) {
+					$('#city').text(json.name);
+					$('#temperature').text(json.main.temp);
+				}
     	</script>
 	</head>
 

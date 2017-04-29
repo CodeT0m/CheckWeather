@@ -25,7 +25,11 @@
     		}
 				function showWeatherData(json) {
 					$('#city').text(json.name);
+					$('#country').text(json.sys.country);
+					$('#conditions').text(json.weather[0].description);
+	        $('#visibility').text(json.weather[0].main);
 					$('#temperature').text(json.main.temp);
+					$('#icon img').attr("src", "http://openweathermap.org/img/w/" + json.weather[0].icon + ".png");
 				}
     	</script>
 	</head>
@@ -65,12 +69,16 @@
 			<div class="row">
 				<div class="col-sm-6">
 					<ul class="list-group">
-						<li class="list-group-item active">City: <span id="city"></span></li>
-						<li class="list-group-item">Temperature: <span id="temperature"></span></li>
+						<li class="list-group-item active">City: <span id="city"></span>, <span id="country"></span></li>
+						<li class="list-group-item">Conditions: <span id="conditions"></span></li>
+		        <li class="list-group-item">Visibility: <span id="visibility"></span></li>
+						<li class="list-group-item">Temperature: <span id="temperature"></span> &deg;C</li>
 					</ul>
 				</div>
 				<div class="col-sm-6">
-
+					<span id="icon">
+						<img src="">
+					</span>
 				</div>
 			</div>
 		</div>

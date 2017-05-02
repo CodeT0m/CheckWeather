@@ -35,8 +35,15 @@
 					$('#pressure').text(json.main.pressure);
 					$('#wind').text(json.wind.speed);
 
-					var time = new Date(json.dt * 1000);
-	        $('#time').text('Updated: ' + time.toLocaleTimeString());
+					//calculate and show time diff from last update
+					var time = json.dt * 1000;
+					var checkTime = new Date(json.dt * 1000);
+					var currentTime = Date.now();
+					var elapsed = currentTime - time;
+					var diff = new Date(elapsed);
+					var diff_mins = diff.getMinutes();
+	        $('#time').text('Updated: ' + diff_mins + ' mins ago');
+					console.log(checkTime.toLocaleString());
 				}
     	</script>
 	</head>

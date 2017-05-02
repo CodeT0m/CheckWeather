@@ -24,12 +24,19 @@
         			});
     		}
 				function showWeatherData(json) {
-					$('#city').text(json.name);
+					$('#cityBig').text(json.name);
 					$('#country').text(json.sys.country);
+					$('#icon img').attr("src", "http://openweathermap.org/img/w/" + json.weather[0].icon + ".png");
+					$('#temperatureBig').text(Math.round(json.main.temp) + String.fromCharCode(176) + 'C');
 					$('#conditions').text(json.weather[0].description);
 	        $('#visibility').text(json.weather[0].main);
-					$('#temperature').text(json.main.temp);
-					$('#icon img').attr("src", "http://openweathermap.org/img/w/" + json.weather[0].icon + ".png");
+					$('#temperature').text(Math.round(json.main.temp));
+					$('#humidity').text(json.main.humidity);
+					$('#pressure').text(json.main.pressure);
+					$('#wind').text(json.wind.speed);
+
+					var time = new Date(json.dt * 1000);
+	        $('#time').text('Updated: ' + time.toLocaleTimeString());
 				}
     	</script>
 	</head>
@@ -67,18 +74,28 @@
 			</div>
 
 			<div class="row">
-				<div class="col-sm-6">
+				<div class="col-sm-3">
 					<ul class="list-group">
-						<li class="list-group-item active">City: <span id="city"></span>, <span id="country"></span></li>
-						<li class="list-group-item">Conditions: <span id="conditions"></span></li>
-		        <li class="list-group-item">Visibility: <span id="visibility"></span></li>
-						<li class="list-group-item">Temperature: <span id="temperature"></span> &deg;C</li>
+						<li class="list-group-item active"><span id="cityBig"></span>, <span id="country"></span></li>
+						<li class="list-group-item">
+							<div id="icon">
+								<img src="" height="100" width="100">
+							</div>
+							<div id="conditions"></div>
+							<div id="temperatureBig"></div>
+							<div id="time"></div>
+						</li>
 					</ul>
 				</div>
 				<div class="col-sm-6">
-					<span id="icon">
-						<img src="">
-					</span>
+					<ul class="list-group">
+						<li class="list-group-item active"><span id="weatherData">Weather data</span></li>
+		        <li class="list-group-item">Visibility: <span id="visibility"></span></li>
+						<li class="list-group-item">Temperature: <span id="temperature"></span> &deg;C</li>
+						<li class="list-group-item">Humidity: <span id="humidity"></span> %</li>
+						<li class="list-group-item">Pressure: <span id="pressure"></span> hPa</li>
+						<li class="list-group-item">Wind: <span id="wind"></span> m/s</li>
+					</ul>
 				</div>
 			</div>
 		</div>

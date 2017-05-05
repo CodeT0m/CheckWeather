@@ -1,101 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
+	<head>
+		<meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Check weather</title>
 
-    <!-- Bootstrap -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+		<title>Weather</title>
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-  
-    <link rel="stylesheet" type="text/css" href="css/index.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script>
-      function getWeather() {
-        var city = $('#city-name').val();
-        //console.log(city);
-        //document.write("jquery loaded");
-        $.getJSON("http://api.openweathermap.org/data/2.5/weather?q=" + city + "&APPID=400eeadc921bc85d05baffffa5663217&units=metric", function(json) {
-            //document.write(JSON.stringify(json));
-            //console.log(JSON.stringify(json));
-            showWeatherData(json);
-          });
-      }
-      function showWeatherData(json) {
-        //$('#weather-data').show();
-        $('#city').text(json.name);
-        $('#country').text(json.sys.country);
-        $('#conditions').text(json.weather[0].description);
-        $('#visibility').text(json.weather[0].main);
-        $('#temperature').text(json.main.temp);
-        $('#wind').text(json.wind.speed);
-        $('#direction').text(json.wind.deg);
-        $('#pressure').text(json.main.pressure);
-        $('#humidity').text(json.main.humidity);
+		<!-- Bootstrap -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="css/index.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-        var time = new Date(json.dt * 1000);
-        $('#time').text(time.toLocaleTimeString());
-        console.log(Date(json.dt * 1000));
-      }
-    </script>
-  </head>
-  <body>
+		<script>
+    		function gettingJSON(){
+        		var city = $('#city-name').val();
+        		//document.write("jquery loaded");
+        		$.getJSON("http://api.openweathermap.org/data/2.5/weather?q=" + city + "&APPID=400eeadc921bc85d05baffffa5663217&units=metric", function(json){
+            		//document.write(JSON.stringify(json));
+								showWeatherData(json);
+        			});
+    		}
+				function showWeatherData(json) {
+					$('#cityBig').text(json.name);
+					$('#country').text(json.sys.country);
+					$('#icon img').attr("src", "http://openweathermap.org/img/w/" + json.weather[0].icon + ".png");
+					$('#temperatureBig').text(Math.round(json.main.temp) + String.fromCharCode(176) + 'C');
+					$('#conditions').text(json.weather[0].description);
+	        $('#visibility').text(json.weather[0].main);
+					$('#temperature').text(Math.round(json.main.temp));
+					$('#humidity').text(json.main.humidity);
+					$('#pressure').text(json.main.pressure);
+					$('#wind').text(json.wind.speed);
 
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">Check weather</a>
-          </div>
-          <div id="navbar" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-              <li class="active"><a href="#">Home</a></li>
-              <li><a href="#about">About</a></li>
-              <li><a href="#contact">Contact</a></li>
-            </ul>
-            <form class="navbar-form navbar-left">
-              <div class="form-group">
-                <input id="city-name" type="text" class="form-control" placeholder="City name">
-              </div>
-              <button type="submit" class="btn btn-default" onclick="getWeather()">Get weather</button>
-            </form>
-          </div><!--/.nav-collapse -->
-        </div>
-    </nav>
+					//calculate and show time diff from last update
+					var time = json.dt * 1000;
+					var checkTime = new Date(json.dt * 1000);
+					var currentTime = Date.now();
+					var elapsed = currentTime - time;
+					var diff = new Date(elapsed);
+					var diff_mins = diff.getMinutes();
+	        $('#time').text('Updated: ' + diff_mins + ' mins ago');
+					//console.log(checkTime.toLocaleString());
+				}
+				function getLocation() {
+    			if (navigator.geolocation) {
+        			navigator.geolocation.getCurrentPosition(showWeatherPosition);
+    			} else {
+        			alert("Geolocation is not supported by this browser.");
+    			}
+				}
+				function showWeatherPosition(position) {
+					$.getJSON("http://api.openweathermap.org/data/2.5/weather?lat=" + position.coords.latitude + "&lon=" + position.coords.longitude + "&APPID=400eeadc921bc85d05baffffa5663217&units=metric", function(json){
+							showWeatherData(json);
+						});
+				}
+				getLocation();
+    	</script>
+	</head>
 
-    <div class="container">
+	<body>
 
-      <ul id="weather-data" class="list-group">
-        <li class="list-group-item active">City: <span id="city"></span>, <span id="country"></span></li>
-        <li class="list-group-item">Conditions: <span id="conditions"></span></li>
-        <li class="list-group-item">Visibility: <span id="visibility"></span></li>
-        <li class="list-group-item">Temperature: <span id="temperature"></span> &deg;C</li>
-        <li class="list-group-item">Wind: <span id="wind"></span> m/s</li>
-        <li class="list-group-item">Wind direction: <span id="direction"></span> &deg;</li>
-        <li class="list-group-item">Pressure: <span id="pressure"></span> hPa</li>
-        <li class="list-group-item">Humidity: <span id="humidity"></span> %</li>
-        <li class="list-group-item">Time: <span id="time"></span></li>
-      </ul>
+		<nav class="navbar navbar-default navbar-fixed-top">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="#">Check Weather</a>
+				</div>
+				<div class="collapse navbar-collapse" id="myNavbar">
+					<ul class="nav navbar-nav">
+						<li class="active"><a href="#">Home</a></li>
+						<li><a href="#">Current weather</a></li>
+						<li><a href="#">3-days forecast</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
 
-    </div>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="form-group">
+						<input id="city-name" type="text" class="form-control" placeholder="City name"/>
+						<button id = "getIt" class="btn btn-default" onclick = "gettingJSON()">Get Weather</button>
+					</div>
+				</div>
+			</div>
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> -->
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-  </body>
+			<div class="row">
+				<div class="col-sm-3">
+					<ul class="list-group">
+						<li class="list-group-item active"><span id="cityBig"></span>, <span id="country"></span></li>
+						<li class="list-group-item">
+							<div id="icon">
+								<img src="" height="100" width="100">
+							</div>
+							<div id="conditions"></div>
+							<div id="temperatureBig"></div>
+							<div id="time"></div>
+						</li>
+					</ul>
+				</div>
+				<div class="col-sm-6">
+					<ul class="list-group">
+						<li class="list-group-item active"><span id="weatherData">Weather data</span></li>
+		        <li class="list-group-item">Visibility: <span id="visibility"></span></li>
+						<li class="list-group-item">Temperature: <span id="temperature"></span> &deg;C</li>
+						<li class="list-group-item">Humidity: <span id="humidity"></span> %</li>
+						<li class="list-group-item">Pressure: <span id="pressure"></span> hPa</li>
+						<li class="list-group-item">Wind: <span id="wind"></span> m/s</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</body>
 </html>

@@ -18,7 +18,7 @@
     		function gettingJSON(){
         		var city = $('#city-name').val();
         		//document.write("jquery loaded");
-        		$.getJSON("http://api.openweathermap.org/data/2.5/weather?q=" + city + "&APPID=400eeadc921bc85d05baffffa5663217&units=metric",function(json){
+        		$.getJSON("http://api.openweathermap.org/data/2.5/weather?q=" + city + "&APPID=400eeadc921bc85d05baffffa5663217&units=metric", function(json){
             		//document.write(JSON.stringify(json));
 								showWeatherData(json);
         			});
@@ -43,8 +43,21 @@
 					var diff = new Date(elapsed);
 					var diff_mins = diff.getMinutes();
 	        $('#time').text('Updated: ' + diff_mins + ' mins ago');
-					console.log(checkTime.toLocaleString());
+					//console.log(checkTime.toLocaleString());
 				}
+				function getLocation() {
+    			if (navigator.geolocation) {
+        			navigator.geolocation.getCurrentPosition(showWeatherPosition);
+    			} else {
+        			alert("Geolocation is not supported by this browser.");
+    			}
+				}
+				function showWeatherPosition(position) {
+					$.getJSON("http://api.openweathermap.org/data/2.5/weather?lat=" + position.coords.latitude + "&lon=" + position.coords.longitude + "&APPID=400eeadc921bc85d05baffffa5663217&units=metric", function(json){
+							showWeatherData(json);
+						});
+				}
+				getLocation();
     	</script>
 	</head>
 

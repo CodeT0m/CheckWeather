@@ -22,6 +22,9 @@
             		//document.write(JSON.stringify(json));
 								showWeatherData(json);
         			});
+						$.getJSON("http://api.openweathermap.org/data/2.5/forecast?q=" + city + "&APPID=400eeadc921bc85d05baffffa5663217&units=metric", function(foreca){
+								showForecast(foreca);
+							});
     		}
 				function showWeatherData(json) {
 					$('#cityBig').text(json.name);
@@ -45,6 +48,56 @@
 	        $('#time').text('Updated: ' + diff_mins + ' mins ago');
 					//console.log(checkTime.toLocaleString());
 				}
+				function showForecast(json) {
+					var day = 7;
+					var startCnt = getStartTime(json);
+					var mMTemp = minMaxTemp(startCnt, day, json);
+					$('#tempMin1').text(Math.round(mMTemp[0]));
+					$('#tempMax1').text(Math.round(mMTemp[1]));
+					$('#tempMin2').text(Math.round(mMTemp[2]));
+					$('#tempMax2').text(Math.round(mMTemp[3]));
+					$('#tempMin3').text(Math.round(mMTemp[4]));
+					$('#tempMax3').text(Math.round(mMTemp[5]));
+				}
+				function getStartTime(json) {
+					var cTime = new Date();
+					var i;
+    			for (i = 0; i < json.cnt; i++) {
+    				var startTime = new Date(json.list[i].dt*1000);
+      			if (startTime.getDate() !== cTime.getDate()) {
+        			i++;
+        			break;
+      			}
+    			}
+					return i;
+				}
+				function minMaxTemp(count, day, json) {
+					var i = count;
+  				var j = 0;
+  				var min = [0, 0, 0];
+  				var max = [0, 0, 0];
+  				for (; i < day + 17; i + 8) {
+  					var range = count + day;
+  					var minTemp = json.list[i].main.temp;
+  					for (; i < range; i++) {
+  						if (minTemp > json.list[i + 1].main.temp) {
+    						minTemp = json.list[i + 1].main.temp;
+    					}
+  					}
+    				min[j] = minTemp;
+  					i = count;
+  					var maxTemp = json.list[i].main.temp;
+  					for (; i < range; i++) {
+  						if (maxTemp < json.list[i + 1].main.temp) {
+    						maxTemp = json.list[i + 1].main.temp;
+    					}
+  					}
+    				max[j] = maxTemp;
+    				j = j + 1;
+    				count = count + 8;
+  				}
+  				return [min[0], max[0], min[1], max[1], min[2], max[2]];
+				}
 				function getLocation() {
     			if (navigator.geolocation) {
         			navigator.geolocation.getCurrentPosition(showWeatherPosition);
@@ -55,6 +108,9 @@
 				function showWeatherPosition(position) {
 					$.getJSON("http://api.openweathermap.org/data/2.5/weather?lat=" + position.coords.latitude + "&lon=" + position.coords.longitude + "&APPID=400eeadc921bc85d05baffffa5663217&units=metric", function(json){
 							showWeatherData(json);
+						});
+					$.getJSON("http://api.openweathermap.org/data/2.5/forecast?lat=" + position.coords.latitude + "&lon=" + position.coords.longitude + "&APPID=400eeadc921bc85d05baffffa5663217&units=metric", function(foreca){
+							showForecast(foreca);
 						});
 				}
 				getLocation();
@@ -115,6 +171,35 @@
 						<li class="list-group-item">Humidity: <span id="humidity"></span> %</li>
 						<li class="list-group-item">Pressure: <span id="pressure"></span> hPa</li>
 						<li class="list-group-item">Wind: <span id="wind"></span> m/s</li>
+					</ul>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-3">
+					<ul class="list-group">
+						<li class="list-group-item active"><span id="day1">Day 1</span></li>
+						<li class="list-group-item">
+							<div id="day1Icon"></div>
+							<div><span id="tempMin1"></span> - <span id="tempMax1"></span></div>
+						</li>
+					</ul>
+				</div>
+				<div class="col-sm-3">
+					<ul class="list-group">
+						<li class="list-group-item active"><span id="day2">Day 2</span></li>
+						<li class="list-group-item">
+							<div id="day2Icon"></div>
+							<div><span id="tempMin2"></span> - <span id="tempMax2"></span></div>
+						</li>
+					</ul>
+				</div>
+				<div class="col-sm-3">
+					<ul class="list-group">
+						<li class="list-group-item active"><span id="day3">Day 3</span></li>
+						<li class="list-group-item">
+							<div id="day3Icon"></div>
+							<div><span id="tempMin3"></span> - <span id="tempMax3"></span></div>
+						</li>
 					</ul>
 				</div>
 			</div>

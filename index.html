@@ -52,12 +52,16 @@
 					var day = 7;
 					var startCnt = getStartTime(json);
 					var mMTemp = minMaxTemp(startCnt, day, json);
-					$('#tempMin1').text(Math.round(mMTemp[0]));
-					$('#tempMax1').text(Math.round(mMTemp[1]));
-					$('#tempMin2').text(Math.round(mMTemp[2]));
-					$('#tempMax2').text(Math.round(mMTemp[3]));
-					$('#tempMin3').text(Math.round(mMTemp[4]));
-					$('#tempMax3').text(Math.round(mMTemp[5]));
+					var icon = showWeatherIcon(startCnt, json);
+					$('#day1Icon img').attr("src", "http://openweathermap.org/img/w/" + icon[0] + ".png");
+					$('#tempMin1').text(Math.round(mMTemp[0]) + String.fromCharCode(176) + 'C');
+					$('#tempMax1').text(Math.round(mMTemp[1]) + String.fromCharCode(176) + 'C');
+					$('#day2Icon img').attr("src", "http://openweathermap.org/img/w/" + icon[1] + ".png");
+					$('#tempMin2').text(Math.round(mMTemp[2]) + String.fromCharCode(176) + 'C');
+					$('#tempMax2').text(Math.round(mMTemp[3]) + String.fromCharCode(176) + 'C');
+					$('#day3Icon img').attr("src", "http://openweathermap.org/img/w/" + icon[2] + ".png");
+					$('#tempMin3').text(Math.round(mMTemp[4]) + String.fromCharCode(176) + 'C');
+					$('#tempMax3').text(Math.round(mMTemp[5]) + String.fromCharCode(176) + 'C');
 				}
 				function getStartTime(json) {
 					var cTime = new Date();
@@ -97,6 +101,19 @@
     				count = count + 8;
   				}
   				return [min[0], max[0], min[1], max[1], min[2], max[2]];
+				}
+				function showWeatherIcon(count, json) {
+					var i = count + 4;
+  				var j = 0;
+  				var k;
+  				var wIcon = ["", "", ""];
+  				for (k = 0; k < 3; k++) {
+    				var icon = json.list[i].weather[0].icon;
+						wIcon[j] = icon;
+    				j = j + 1;
+    				i = i + 8;
+  				}
+  				return [wIcon[0], wIcon[1], wIcon[2]];
 				}
 				function getLocation() {
     			if (navigator.geolocation) {
@@ -179,8 +196,10 @@
 					<ul class="list-group">
 						<li class="list-group-item active"><span id="day1">Day 1</span></li>
 						<li class="list-group-item">
-							<div id="day1Icon"></div>
-							<div><span id="tempMin1"></span> - <span id="tempMax1"></span></div>
+							<div id="day1Icon">
+								<img src="" height="100" width="100">
+							</div>
+							<div id="forecaTemp">Max <span id="tempMax1"></span> - Min <span id="tempMin1"></span></div>
 						</li>
 					</ul>
 				</div>
@@ -188,8 +207,10 @@
 					<ul class="list-group">
 						<li class="list-group-item active"><span id="day2">Day 2</span></li>
 						<li class="list-group-item">
-							<div id="day2Icon"></div>
-							<div><span id="tempMin2"></span> - <span id="tempMax2"></span></div>
+							<div id="day2Icon">
+								<img src="" height="100" width="100">
+							</div>
+							<div id="forecaTemp">Max <span id="tempMax2"></span> - Min <span id="tempMin2"></span></div>
 						</li>
 					</ul>
 				</div>
@@ -197,8 +218,10 @@
 					<ul class="list-group">
 						<li class="list-group-item active"><span id="day3">Day 3</span></li>
 						<li class="list-group-item">
-							<div id="day3Icon"></div>
-							<div><span id="tempMin3"></span> - <span id="tempMax3"></span></div>
+							<div id="day3Icon">
+								<img src="" height="100" width="100">
+							</div>
+							<div id="forecaTemp">Max <span id="tempMax3"></span> - Min <span id="tempMin3"></span></div>
 						</li>
 					</ul>
 				</div>

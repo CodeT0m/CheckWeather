@@ -40,7 +40,7 @@
 
 					//calculate and show time diff from last update
 					var time = json.dt * 1000;
-					var checkTime = new Date(json.dt * 1000);
+					//var checkTime = new Date(json.dt * 1000);
 					var currentTime = Date.now();
 					var elapsed = currentTime - time;
 					var diff = new Date(elapsed);
@@ -53,13 +53,22 @@
 					var startCnt = getStartTime(json);
 					var mMTemp = minMaxTemp(startCnt, day, json);
 					var icon = showWeatherIcon(startCnt, json);
+					var forecaTime = new Date(json.list[startCnt].dt * 1000);
+					$('#day1').text(forecaTime.toLocaleDateString());
 					$('#day1Icon img').attr("src", "http://openweathermap.org/img/w/" + icon[0] + ".png");
+					$('#day1Cond').text(icon[1]);
 					$('#tempMin1').text(Math.round(mMTemp[0]) + String.fromCharCode(176) + 'C');
 					$('#tempMax1').text(Math.round(mMTemp[1]) + String.fromCharCode(176) + 'C');
-					$('#day2Icon img').attr("src", "http://openweathermap.org/img/w/" + icon[1] + ".png");
+					forecaTime = new Date(json.list[startCnt+8].dt * 1000);
+					$('#day2').text(forecaTime.toLocaleDateString());
+					$('#day2Icon img').attr("src", "http://openweathermap.org/img/w/" + icon[2] + ".png");
+					$('#day2Cond').text(icon[3]);
 					$('#tempMin2').text(Math.round(mMTemp[2]) + String.fromCharCode(176) + 'C');
 					$('#tempMax2').text(Math.round(mMTemp[3]) + String.fromCharCode(176) + 'C');
-					$('#day3Icon img').attr("src", "http://openweathermap.org/img/w/" + icon[2] + ".png");
+					forecaTime = new Date(json.list[startCnt+16].dt * 1000);
+					$('#day3').text(forecaTime.toLocaleDateString());
+					$('#day3Icon img').attr("src", "http://openweathermap.org/img/w/" + icon[4] + ".png");
+					$('#day3Cond').text(icon[5]);
 					$('#tempMin3').text(Math.round(mMTemp[4]) + String.fromCharCode(176) + 'C');
 					$('#tempMax3').text(Math.round(mMTemp[5]) + String.fromCharCode(176) + 'C');
 				}
@@ -106,14 +115,17 @@
 					var i = count + 4;
   				var j = 0;
   				var k;
-  				var wIcon = ["", "", ""];
+  				var wIcon = ["", "", "", "", "", ""];
   				for (k = 0; k < 3; k++) {
     				var icon = json.list[i].weather[0].icon;
+						var cond = json.list[i].weather[0].description;
 						wIcon[j] = icon;
     				j = j + 1;
+						wIcon[j] = cond;
+						j = j + 1;
     				i = i + 8;
   				}
-  				return [wIcon[0], wIcon[1], wIcon[2]];
+  				return [wIcon[0], wIcon[1], wIcon[2], wIcon[3], wIcon[4], wIcon[5]];
 				}
 				function getLocation() {
     			if (navigator.geolocation) {
@@ -194,33 +206,36 @@
 			<div class="row">
 				<div class="col-sm-3">
 					<ul class="list-group">
-						<li class="list-group-item active"><span id="day1">Day 1</span></li>
+						<li class="list-group-item active"><span id="day1"></span></li>
 						<li class="list-group-item">
 							<div id="day1Icon">
 								<img src="" height="100" width="100">
 							</div>
+							<div id="day1Cond"></div>
 							<div id="forecaTemp">Max <span id="tempMax1"></span> - Min <span id="tempMin1"></span></div>
 						</li>
 					</ul>
 				</div>
 				<div class="col-sm-3">
 					<ul class="list-group">
-						<li class="list-group-item active"><span id="day2">Day 2</span></li>
+						<li class="list-group-item active"><span id="day2"></span></li>
 						<li class="list-group-item">
 							<div id="day2Icon">
 								<img src="" height="100" width="100">
 							</div>
+							<div id="day2Cond"></div>
 							<div id="forecaTemp">Max <span id="tempMax2"></span> - Min <span id="tempMin2"></span></div>
 						</li>
 					</ul>
 				</div>
 				<div class="col-sm-3">
 					<ul class="list-group">
-						<li class="list-group-item active"><span id="day3">Day 3</span></li>
+						<li class="list-group-item active"><span id="day3"></span></li>
 						<li class="list-group-item">
 							<div id="day3Icon">
 								<img src="" height="100" width="100">
 							</div>
+							<div id="day3Cond"></div>
 							<div id="forecaTemp">Max <span id="tempMax3"></span> - Min <span id="tempMin3"></span></div>
 						</li>
 					</ul>

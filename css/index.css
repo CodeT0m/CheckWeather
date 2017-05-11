@@ -4,6 +4,6 @@ body {
 #temperatureBig {
 	font-size: xx-large;
 }
-#cityBig, #weatherData, #country, #forecaTemp, #day1, #day2, #day3 {
+#cityBig, #weatherData, #country {
 	font-size: large;
 }
